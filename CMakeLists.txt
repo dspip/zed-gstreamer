@@ -14,6 +14,7 @@ find_package(GStreamer REQUIRED COMPONENTS base)
 macro_log_feature(GSTREAMER_FOUND "GStreamer" "Required to build ${proj_name}" "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
 macro_log_feature(GSTREAMER_BASE_LIBRARY_FOUND "GStreamer base library" "Required to build ${proj_name}" "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
 
+
 find_package(GStreamerPluginsBase COMPONENTS video)
 macro_log_feature(GSTREAMER_VIDEO_LIBRARY_FOUND "GStreamer video library" "Required to build ${proj_name}" "http://gstreamer.freedesktop.org/" TRUE "1.2.0")
 
@@ -31,6 +32,9 @@ macro_log_feature(CUDA_FOUND "Nvidia CUDA library" "Required to build 'gstzed'" 
 
 find_package(OpenCV)
 macro_log_feature(OpenCV_FOUND "OpenCV library" "Required to build 'gstzedodoverlay'" "http://www.opencv.org" FALSE)
+
+find_package(nlohmann_json)
+macro_log_feature(nlohmann_json_FOUND "nlohmann_json" "Required to build 'gstzedmetasink'" "https://github.com/nlohmann/json" FALSE)
 
 if(NOT WIN32)
     pkg_check_modules(GSTRTSPSERVER gstreamer-rtsp-server-1.0>=1.14.5)
@@ -51,6 +55,9 @@ add_definitions(-DGST_PACKAGE_ORIGIN="https://github.com/stereolabs/zed-gstreame
 add_definitions(-DGST_PACKAGE_NAME="${CMAKE_PROJECT_NAME}")
 add_definitions(-DPACKAGE="${CMAKE_PROJECT_NAME} package")
 
+get_filename_component(ARCH_FOLDER_NAME "${GSTREAMER_PLUGIN_DIR}/../" REALPATH)
+get_filename_component(ARCH_FOLDER_NAME "${ARCH_FOLDER_NAME}" NAME)
+
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
     if(WIN32)
         get_filename_component(_PREFIX "${GSTREAMER_PLUGIN_DIR}/../../" REALPATH)
@@ -63,40 +70,24 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 if(NOT LIBRARY_INSTALL_DIR)
-    set(LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/"
+    set(LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib"
         CACHE PATH "Location to install libraries (e.g., libgstklv-1.0-0.so/dll)")
 endif()
 if(NOT PLUGIN_INSTALL_DIR)
-    if(WIN32)
-        set(PLUGIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/gstreamer-1.0/"
-            CACHE PATH "Location to install plugins (e.g., libgstpylon.so/dll)")
-    else()
-        set(PLUGIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/gstreamer-1.0/"
-            CACHE PATH "Location to install plugins (e.g., libgstpylon.so/dll)")
-    endif()
+    set(PLUGIN_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/${ARCH_FOLDER_NAME}/gstreamer-1.0/"
+        CACHE PATH "Location to install plugins (e.g., libgstpylon.so/dll)")
 endif()
 if (WIN32 AND NOT PDB_INSTALL_DIR)
     set(PDB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/gstreamer-1.0/"
         CACHE PATH "Location to install PDB debug files (e.g., libgstpylon.pdb)")
 endif()
 if(NOT INCLUDE_INSTALL_DIR)
-    if(WIN32)
-        set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0/gst/zed/"
-            CACHE PATH "Location to install include headers" FORCE)
-    else()
-        get_filename_component(INC_PREFIX "${GSTREAMER_PLUGIN_DIR}/../../../" REALPATH)
-        set(INCLUDE_INSTALL_DIR "${INC_PREFIX}/include/gstreamer-1.0/gst/zed/"
-            CACHE PATH "Location to install include headers" FORCE)
-    endif()
+    set(INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/gstreamer-1.0/gst/zed/"
+        CACHE PATH "Location to install include headers" FORCE)
 endif()
 if(NOT EXE_INSTALL_DIR)
-    if(WIN32)
-        set(EXE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/bin"
-            CACHE PATH "Location to install executables" FORCE)
-    else()
-        set(EXE_INSTALL_DIR "/usr/bin"
-            CACHE PATH "Location to install executables" FORCE)
-    endif()
+    set(EXE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/bin"
+        CACHE PATH "Location to install executables" FORCE)
 endif()
 
 message("")
@@ -131,6 +122,11 @@ if(GSTRTSPSERVER_FOUND)
     add_subdirectory(gst-zed-rtsp-server)
 else()
     message( "GstRTSPServer not available. 'gst-zed-rtsp-launch' will not be installed")
+endif()
+if(nlohmann_json_FOUND)
+    add_subdirectory(gst-zed-meta-json)
+else()
+    message( "nlohmann_json not available. 'gst-zed-meta-json' will not be installed")
 endif()
 
 ####################################################################
