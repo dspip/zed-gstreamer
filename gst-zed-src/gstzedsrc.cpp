@@ -111,51 +111,6 @@ enum
     N_PROPERTIES
 };
 
-typedef enum {
-    GST_ZEDSRC_100FPS = 100,
-    GST_ZEDSRC_60FPS = 60,
-    GST_ZEDSRC_30FPS = 30,
-    GST_ZEDSRC_15FPS = 15
-} GstZedSrcFPS;
-
-typedef enum {
-    GST_ZEDSRC_NO_FLIP = 0,
-    GST_ZEDSRC_FLIP = 1,
-    GST_ZEDSRC_AUTO = 2,
-} GstZedSrcFlip;
-
-typedef enum {
-    GST_ZEDSRC_ONLY_LEFT = 0,
-    GST_ZEDSRC_ONLY_RIGHT = 1,
-    GST_ZEDSRC_LEFT_RIGHT = 2,
-    GST_ZEDSRC_DEPTH_16 = 3,
-    GST_ZEDSRC_LEFT_DEPTH = 4
-} GstZedSrcStreamType;
-
-typedef enum {
-    GST_ZEDSRC_COORD_IMAGE = 0,
-    GST_ZEDSRC_COORD_LEFT_HANDED_Y_UP = 1,
-    GST_ZEDSRC_COORD_RIGHT_HANDED_Y_UP  = 2,
-    GST_ZEDSRC_COORD_RIGHT_HANDED_Z_UP = 3,
-    GST_ZEDSRC_COORD_LEFT_HANDED_Z_UP = 4,
-    GST_ZEDSRC_COORD_RIGHT_HANDED_Z_UP_X_FWD = 5
-} GstZedSrcCoordSys;
-
-typedef enum {
-    GST_ZEDSRC_OD_MULTI_CLASS_BOX = 0,
-    GST_ZEDSRC_OD_MULTI_CLASS_BOX_ACCURATE = 1,
-    GST_ZEDSRC_OD_HUMAN_BODY_FAST = 2,
-    GST_ZEDSRC_OD_HUMAN_BODY_ACCURATE  = 3,
-    GST_ZEDSRC_OD_MULTI_CLASS_BOX_MEDIUM = 4,
-    GST_ZEDSRC_OD_HUMAN_BODY_MEDIUM  = 5
-} GstZedSrcOdModel;
-
-typedef enum {
-    GST_ZEDSRC_SIDE_LEFT= 0,
-    GST_ZEDSRC_SIDE_RIGHT = 1,
-    GST_ZEDSRC_SIDE_BOTH = 2
-} GstZedSrcSide;
-
 //////////////// DEFAULT PARAMETERS //////////////////////////////////////////////////////////////////////////
 
 // INITIALIZATION
